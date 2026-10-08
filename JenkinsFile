@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('clone repo') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Naveenkumar511/Jenkins-demo-go-app.git'
+            }
+        }
+        stage('build image') {
+            steps {
+               sh 'docker build -t go-app .'
+            }
+        }
+        stage('delete existing container') {
+            steps {
+               sh 'docker rm -f go-app || true'
+            }
+        }
+        stage('run container') {
+            steps {
+               sh 'docker run -d -p 8081:8080 --name go-app go-app'
+            }
+        }
+    }
+}
